@@ -1,0 +1,14 @@
+
+report.conky.description=Conky Report
+report.conky.columns=project,id,description.truncated
+report.conky.labels=Project,ID,Description
+report.conky.sort=urgency-
+report.conky.filter=status:pending and +READY limit:page
+
+report.inbox.description=Tasks to be processed
+report.inbox.columns=project,id,description.truncated
+report.inbox.labels=Project,ID,Description
+report.inbox.sort=urgency-
+report.inbox.filter=(proj:Inbox or +inbox) and  +READY limit:page
+context.home=proj.not:Scania and proj.not:TATA and proj.not:Subaru
+context=home
