@@ -3,7 +3,7 @@ report.conky.description=Conky Report
 report.conky.columns=project,id,description.truncated
 report.conky.labels=Project,ID,Description
 report.conky.sort=urgency-
-report.conky.filter=status:pending and +READY limit:page
+report.conky.filter=status:pending and project.not:Inbox and +READY limit:page
 
 report.inbox.description=Tasks to be processed
 report.inbox.columns=project,id,description.truncated
