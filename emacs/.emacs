@@ -79,7 +79,7 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(default ((t (:inherit nil :stipple nil :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 120 :width normal :foundry "ADBO" :family "DejaVu Sans Mono")))))
+ '(default ((t (:inherit nil :stipple nil :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 100 :width normal :foundry "unknown" :family "DejaVu Sans Mono")))))
 (put 'erase-buffer 'disabled nil)
 
 (require 'cl-lib)
@@ -101,23 +101,23 @@
     (when (not (package-installed-p p))
       (package-install p))))
 
-(require 'auto-complete)
-(require 'auto-complete-config)
+;;(require 'auto-complete)
+;;(require 'auto-complete-config)
 
 ;;(add-to-list 'ac-sources `ac-source-
-(ac-config-default)
+;;(ac-config-default)
 
 (require 'yasnippet)
 (yas-global-mode 1)
 
-(defun my/ac-c-cpp-header-init ()
-  (require 'auto-complete-c-headers)
-  (add-to-list 'ac-sources 'ac-source-c-headers)
-  )
+;;(defun my/ac-c-cpp-header-init ()
+;;  (require 'auto-complete-c-headers)
+;;  (add-to-list 'ac-sources 'ac-source-c-headers)
+;;  )
 
 
-(add-hook 'c++-mode-hook 'my/ac-c-cpp-header-init nil t)
-(add-hook 'c-mode-hook 'my/ac-c-cpp-header-init nil t)
+;;(add-hook 'c++-mode-hook 'my/ac-c-cpp-header-init nil t)
+;;(add-hook 'c-mode-hook 'my/ac-c-cpp-header-init nil t)
 
 (require 'auto-indent-mode )
 (auto-indent-global-mode)
@@ -125,23 +125,24 @@
 (evil-mode 1 )
 
 (require 'powerline)
-(powerline-default-theme)
-(semantic-mode 1)
+(powerline-center-theme)
+;;(semantic-mode 1)
 
 ;; funciton to add semantic to auto-complete types
-(defun my/add-semantic-to-ac ()
-  (add-to-list 'ac-sources 'ac-source-semantic)
-  )
+;;(defun my/add-semantic-to-ac ()
+;;  (add-to-list 'ac-sources 'ac-source-semantic)
+;;  )
 
 ;; add hook to enable semantic completion on c/c++ files
-(add-hook 'c-mode-common-hook 'my/add-semantic-to-ac)
+;;(add-hook 'c-mode-common-hook 'my/add-semantic-to-ac)
 
 ;; enable Emacs Dev Env features globally
-(global-ede-mode t)
+;;(global-ede-mode t)
 
 
 (require 'helm)
 (require 'helm-config)
+(setq helm-buffers-fuzzy-matching t)
 
 ;; The default "C-x c" is quite close to "C-x C-c", which quits Emacs.
 ;; Changed to "C-c h". Note: We must set "C-c h" globally, because we
@@ -200,9 +201,6 @@
 
 (eval-after-load 'flycheck
   '(add-hook 'flycheck-mode-hook #'flycheck-irony-setup))
-
-
-
 
 
 
