@@ -54,15 +54,18 @@
  '(hl-fg-colors
    (quote
     ("#002b36" "#002b36" "#002b36" "#002b36" "#002b36" "#002b36" "#002b36" "#002b36")))
+ '(inhibit-startup-screen t)
+ '(irony-additional-clang-options nil)
  '(magit-diff-use-overlays nil)
  '(package-selected-packages
    (quote
-    (flycheck powerline-evil powerline 0blayout evil auto-indent-mode zenburn-theme auto-complete markdown-mode magit cl-lib solarized-theme)))
+    (flycheck-irony company-irony company irony projectile flycheck powerline-evil powerline 0blayout evil auto-indent-mode zenburn-theme auto-complete markdown-mode magit cl-lib solarized-theme)))
  '(pos-tip-background-color "#073642")
  '(pos-tip-foreground-color "#93a1a1")
  '(smartrep-mode-line-active-bg (solarized-color-blend "#859900" "#073642" 0.2))
  '(term-default-bg-color "#002b36")
  '(term-default-fg-color "#839496")
+ '(tool-bar-mode nil)
  '(vc-annotate-background-mode nil)
  '(weechat-color-list
    (quote
@@ -76,13 +79,13 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(default ((t (:inherit nil :stipple nil :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 109 :width normal :foundry "PfEd" :family "DejaVu Sans Mono")))))
+ '(default ((t (:inherit nil :stipple nil :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 120 :width normal :foundry "ADBO" :family "DejaVu Sans Mono")))))
 (put 'erase-buffer 'disabled nil)
 
 (require 'cl-lib)
 
 (defvar my-packages
-  '( magit markdown-mode auto-complete solarized-theme zenburn-theme yasnippet auto-complete-c-headers auto-indent-mode evil powerline powerline-evil flycheck helm )
+  '( magit markdown-mode auto-complete solarized-theme zenburn-theme yasnippet auto-complete-c-headers auto-indent-mode evil powerline powerline-evil flycheck helm projectile irony company company-irony flycheck-irony  )
   "A list of packages to ensure are installed at launch.")
 
 (defun my-packages-installed-p ()
@@ -118,8 +121,8 @@
 
 (require 'auto-indent-mode )
 (auto-indent-global-mode)
-;; (require 'evil )
-;; (evil-mode 1 )
+(require 'evil )
+(evil-mode 1 )
 
 (require 'powerline)
 (powerline-default-theme)
@@ -136,8 +139,6 @@
 ;; enable Emacs Dev Env features globally
 (global-ede-mode t)
 
-(require 'flycheck)
-(global-flycheck-mode t)
 
 (require 'helm)
 (require 'helm-config)
@@ -181,3 +182,27 @@
 (helm-autoresize-mode 1)
 
 (helm-mode 1)
+(require 'company)
+(global-company-mode t)
+
+(require 'company-irony)
+(eval-after-load 'company
+  '(add-to-list 'company-backends 'company-irony))
+;; irony mode setup
+(require 'irony)
+(add-hook 'c++-mode-hook 'irony-mode)
+(add-hook 'c-mode-hook 'irony-mode)
+(add-hook 'objc-mode-hook 'irony-mode)
+(add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options)
+
+(require 'flycheck)
+(global-flycheck-mode t)
+
+(eval-after-load 'flycheck
+  '(add-hook 'flycheck-mode-hook #'flycheck-irony-setup))
+
+
+
+
+
+
