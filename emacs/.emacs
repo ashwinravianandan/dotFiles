@@ -1,3 +1,9 @@
+;; Added by Package.el.  This must come before configurations of
+;; installed packages.  Don't delete this line.  If you don't want it,
+;; just comment it out by adding a semicolon to the start of the line.
+;; You may delete these explanatory comments.
+
+
 (require 'package) ;; You might already have this line
 (let* ((no-ssl (and (memq system-type '(windows-nt ms-dos))
                     (not (gnutls-available-p))))
@@ -6,12 +12,6 @@
 (when (< emacs-major-version 24)
   ;; For important compatibility libraries like cl-lib
   (add-to-list 'package-archives '("gnu" . "http://elpa.gnu.org/packages/")))
-
-;; Added by Package.el.  This must come before configurations of
-;; installed packages.  Don't delete this line.  If you don't want it,
-;; just comment it out by adding a semicolon to the start of the line.
-;; You may delete these explanatory comments.
-
 (package-initialize)
 
 (custom-set-variables
@@ -28,9 +28,6 @@
  '(custom-safe-themes
    (quote
     ("2a739405edf418b8581dcd176aaf695d319f99e3488224a3c495cb0f9fd814e3" "8aebf25556399b58091e533e455dd50a6a9cba958cc4ebb0aab175863c25b9a4" default)))
- '(ede-project-directories
-   (quote
-    ("/home/ashwin/gitRepos/DeskInformationSystem-Server")))
  '(highlight-changes-colors (quote ("#d33682" "#6c71c4")))
  '(highlight-symbol-colors
    (--map
@@ -57,9 +54,10 @@
  '(inhibit-startup-screen t)
  '(irony-additional-clang-options nil)
  '(magit-diff-use-overlays nil)
+ '(menu-bar-mode nil)
  '(package-selected-packages
    (quote
-    (flycheck-irony company-irony company irony projectile flycheck powerline-evil powerline 0blayout evil auto-indent-mode zenburn-theme auto-complete markdown-mode magit cl-lib solarized-theme)))
+    (helm-projectile ggtags evil-leader flycheck-irony company-irony company irony projectile flycheck powerline-evil powerline 0blayout evil auto-indent-mode zenburn-theme auto-complete markdown-mode magit cl-lib solarized-theme)))
  '(pos-tip-background-color "#073642")
  '(pos-tip-foreground-color "#93a1a1")
  '(smartrep-mode-line-active-bg (solarized-color-blend "#859900" "#073642" 0.2))
@@ -79,13 +77,13 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(default ((t (:inherit nil :stipple nil :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 100 :width normal :foundry "unknown" :family "DejaVu Sans Mono")))))
+ '(default ((t (:inherit nil :stipple nil :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 100 :width normal :foundry "unknown" :family "Source Code Pro")))))
 (put 'erase-buffer 'disabled nil)
 
 (require 'cl-lib)
 
 (defvar my-packages
-  '( magit markdown-mode auto-complete solarized-theme zenburn-theme yasnippet auto-complete-c-headers auto-indent-mode evil powerline powerline-evil flycheck helm projectile irony company company-irony flycheck-irony  )
+  '( magit markdown-mode auto-complete solarized-theme zenburn-theme yasnippet auto-complete-c-headers auto-indent-mode evil powerline powerline-evil flycheck helm projectile irony company company-irony flycheck-irony company-irony-c-headers evil-leader ggtags helm-projectile )
   "A list of packages to ensure are installed at launch.")
 
 (defun my-packages-installed-p ()
@@ -110,19 +108,18 @@
 (require 'yasnippet)
 (yas-global-mode 1)
 
-;;(defun my/ac-c-cpp-header-init ()
-;;  (require 'auto-complete-c-headers)
-;;  (add-to-list 'ac-sources 'ac-source-c-headers)
-;;  )
-
-
-;;(add-hook 'c++-mode-hook 'my/ac-c-cpp-header-init nil t)
-;;(add-hook 'c-mode-hook 'my/ac-c-cpp-header-init nil t)
+(require 'magit)
+(magit-mode t)
 
 (require 'auto-indent-mode )
 (auto-indent-global-mode)
 (require 'evil )
 (evil-mode 1 )
+(require 'evil-leader)
+(evil-leader-mode t)
+(evil-leader/set-leader ",")
+
+
 
 (require 'powerline)
 (powerline-center-theme)
@@ -143,9 +140,16 @@
 (require 'helm)
 (require 'helm-config)
 (setq helm-buffers-fuzzy-matching t)
+(evil-leader/set-key "r" 'helm-find-files)
+
+(require 'projectile)
+(projectile-mode t)
+(require 'helm-projectile)
+(helm-projectile-on)
+
 
 ;; The default "C-x c" is quite close to "C-x C-c", which quits Emacs.
-;; Changed to "C-c h". Note: We must set "C-c h" globally, because we
+		 ;; Changed to "C-c h". Note: We must set "C-c h" globally, because we
 ;; cannot change `helm-command-prefix-key' once `helm-config' is loaded.
 (global-set-key (kbd "C-c h") 'helm-command-prefix)
 (global-unset-key (kbd "C-x c"))
@@ -187,8 +191,24 @@
 (global-company-mode t)
 
 (require 'company-irony)
+(require 'company-irony-c-headers)
 (eval-after-load 'company
-  '(add-to-list 'company-backends 'company-irony))
+  '(add-to-list 'company-backends '(company-irony company-irony-c-headers) )
+)
+(setq company-minimum-prefix-length 1)
+(setq company-idle-delay 0.1)
+(setq company-auto-complete t)
+
+;;(defun my/company-c-cpp-header-init ()
+;;(eval-after-load 'company
+					;   ; '(require 'company-irony-c-headers)
+					;   ; '(add-to-list 'company-backends '('company-irony 'company-irony-c-headers))
+					;   ; )
+					; ; )
+;;
+					;;(add-hook 'c++-mode-hook 'my/company-c-cpp-header-init nil t)
+					;;(add-hook 'c-mode-hook 'my/company-c-cpp-header-init nil t)
+
 ;; irony mode setup
 (require 'irony)
 (add-hook 'c++-mode-hook 'irony-mode)
@@ -196,11 +216,14 @@
 (add-hook 'objc-mode-hook 'irony-mode)
 (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options)
 
+(setq-default c-basic-offset 3)
+
 (require 'flycheck)
 (global-flycheck-mode t)
 
 (eval-after-load 'flycheck
   '(add-hook 'flycheck-mode-hook #'flycheck-irony-setup))
+
 
 
 
