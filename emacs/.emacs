@@ -57,7 +57,7 @@
  '(menu-bar-mode nil)
  '(package-selected-packages
    (quote
-    (helm-projectile ggtags evil-leader flycheck-irony company-irony company irony projectile flycheck powerline-evil powerline 0blayout evil auto-indent-mode zenburn-theme auto-complete markdown-mode magit cl-lib solarized-theme)))
+    (helm-gtags helm-projectile ggtags evil-leader flycheck-irony company-irony company irony projectile flycheck powerline-evil powerline 0blayout evil auto-indent-mode zenburn-theme auto-complete markdown-mode magit cl-lib solarized-theme)))
  '(pos-tip-background-color "#073642")
  '(pos-tip-foreground-color "#93a1a1")
  '(smartrep-mode-line-active-bg (solarized-color-blend "#859900" "#073642" 0.2))
@@ -83,7 +83,7 @@
 (require 'cl-lib)
 
 (defvar my-packages
-  '( magit markdown-mode auto-complete solarized-theme zenburn-theme yasnippet auto-complete-c-headers auto-indent-mode evil powerline powerline-evil flycheck helm projectile irony company company-irony flycheck-irony company-irony-c-headers evil-leader ggtags helm-projectile )
+  '( magit markdown-mode auto-complete solarized-theme zenburn-theme yasnippet auto-complete-c-headers auto-indent-mode evil powerline powerline-evil flycheck helm projectile irony company company-irony flycheck-irony company-irony-c-headers evil-leader helm-projectile helm-gtags )
   "A list of packages to ensure are installed at launch.")
 
 (defun my-packages-installed-p ()
@@ -108,13 +108,16 @@
 (require 'yasnippet)
 (yas-global-mode 1)
 
+
 (require 'magit)
-(magit-mode t)
+(magit-mode)
+;;(setq magit-push-current-set-remote-if-missing t)
 
 (require 'auto-indent-mode )
 (auto-indent-global-mode)
 (require 'evil )
 (evil-mode 1 )
+
 (require 'evil-leader)
 (evil-leader-mode t)
 (evil-leader/set-leader ",")
@@ -197,7 +200,6 @@
 )
 (setq company-minimum-prefix-length 1)
 (setq company-idle-delay 0.1)
-(setq company-auto-complete t)
 
 ;;(defun my/company-c-cpp-header-init ()
 ;;(eval-after-load 'company
@@ -216,6 +218,22 @@
 (add-hook 'objc-mode-hook 'irony-mode)
 (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options)
 
+(require 'helm-gtags)
+(add-hook 'c++-mode-hook 'helm-gtags-mode)
+(add-hook 'c-mode-hook 'helm-gtags-mode)
+;; Set key bindings
+(eval-after-load "helm-gtags"
+  '(progn
+     (define-key helm-gtags-mode-map (kbd "M-t") 'helm-gtags-find-tag)
+     (define-key helm-gtags-mode-map (kbd "M-r") 'helm-gtags-find-rtag)
+     (define-key helm-gtags-mode-map (kbd "M-s") 'helm-gtags-find-symbol)
+     (define-key helm-gtags-mode-map (kbd "M-g M-p") 'helm-gtags-parse-file)
+     (define-key helm-gtags-mode-map (kbd "C-c <") 'helm-gtags-previous-history)
+     (define-key helm-gtags-mode-map (kbd "C-c >") 'helm-gtags-next-history)
+     (define-key helm-gtags-mode-map (kbd "M-,") 'helm-gtags-pop-stack)))
+
+
+
 (setq-default c-basic-offset 3)
 
 (require 'flycheck)
@@ -223,7 +241,5 @@
 
 (eval-after-load 'flycheck
   '(add-hook 'flycheck-mode-hook #'flycheck-irony-setup))
-
-
 
 
