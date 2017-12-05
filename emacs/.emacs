@@ -19,15 +19,27 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(ansi-color-names-vector
+   ["#3F3F3F" "#CC9393" "#7F9F7F" "#F0DFAF" "#8CD0D3" "#DC8CC3" "#93E0E3" "#DCDCCC"])
+ '(c-basic-offset 3)
+ '(c-default-style
+   (quote
+    ((c-mode . "linux")
+     (c++-mode . "linux")
+     (java-mode . "java")
+     (awk-mode . "awk")
+     (other . "gnu"))))
+ '(company-auto-complete nil)
+ '(company-ycmd-request-sync-timeout 0.1)
  '(compilation-message-face (quote default))
  '(cua-global-mark-cursor-color "#2aa198")
  '(cua-normal-cursor-color "#839496")
  '(cua-overwrite-cursor-color "#b58900")
  '(cua-read-only-cursor-color "#859900")
- '(custom-enabled-themes (quote (zenburn)))
+ '(custom-enabled-themes (quote (sanityinc-tomorrow-night)))
  '(custom-safe-themes
    (quote
-    ("2a739405edf418b8581dcd176aaf695d319f99e3488224a3c495cb0f9fd814e3" "8aebf25556399b58091e533e455dd50a6a9cba958cc4ebb0aab175863c25b9a4" default)))
+    ("06f0b439b62164c6f8f84fdda32b62fb50b6d00e8b01c2208e55543a6337433a" "2a739405edf418b8581dcd176aaf695d319f99e3488224a3c495cb0f9fd814e3" "8aebf25556399b58091e533e455dd50a6a9cba958cc4ebb0aab175863c25b9a4" default)))
  '(highlight-changes-colors (quote ("#d33682" "#6c71c4")))
  '(highlight-symbol-colors
    (--map
@@ -55,9 +67,13 @@
  '(irony-additional-clang-options nil)
  '(magit-diff-use-overlays nil)
  '(menu-bar-mode nil)
+ '(nrepl-message-colors
+   (quote
+    ("#dc322f" "#cb4b16" "#b58900" "#546E00" "#B4C342" "#00629D" "#2aa198" "#d33682" "#6c71c4")))
  '(package-selected-packages
    (quote
-    (helm-gtags helm-projectile ggtags evil-leader flycheck-irony company-irony company irony projectile flycheck powerline-evil powerline 0blayout evil auto-indent-mode zenburn-theme auto-complete markdown-mode magit cl-lib solarized-theme)))
+    (company-math color-theme-sanityinc-tomorrow flycheck-ycmd company-ycmd ycmd use-package helm-gtags helm-projectile ggtags evil-leader flycheck-irony company-irony company irony projectile flycheck powerline-evil powerline 0blayout evil auto-indent-mode zenburn-theme auto-complete markdown-mode magit cl-lib solarized-theme)))
+ '(pdf-view-midnight-colors (quote ("#DCDCCC" . "#383838")))
  '(pos-tip-background-color "#073642")
  '(pos-tip-foreground-color "#93a1a1")
  '(smartrep-mode-line-active-bg (solarized-color-blend "#859900" "#073642" 0.2))
@@ -77,83 +93,48 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(default ((t (:inherit nil :stipple nil :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 100 :width normal :foundry "unknown" :family "Source Code Pro")))))
+ '(default ((t (:inherit nil :stipple nil :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 110 :width normal :foundry "ADBO" :family "Source Code Pro")))))
 (put 'erase-buffer 'disabled nil)
 
-(require 'cl-lib)
+(package-initialize)
 
-(defvar my-packages
-  '( magit markdown-mode auto-complete solarized-theme zenburn-theme yasnippet auto-complete-c-headers auto-indent-mode evil powerline powerline-evil flycheck helm projectile irony company company-irony flycheck-irony company-irony-c-headers evil-leader helm-projectile helm-gtags )
-  "A list of packages to ensure are installed at launch.")
-
-(defun my-packages-installed-p ()
-  (cl-loop for p in my-packages
-           when (not (package-installed-p p)) do (cl-return nil)
-           finally (cl-return t)))
-
-(unless (my-packages-installed-p)
-  ;; check for new packages (package versions)
+(unless (package-installed-p 'use-package)
   (package-refresh-contents)
-  ;; install the missing packages
-  (dolist (p my-packages)
-    (when (not (package-installed-p p))
-      (package-install p))))
+  (package-install 'use-package))
 
-;;(require 'auto-complete)
-;;(require 'auto-complete-config)
+(eval-when-compile
+  (require 'use-package))
 
-;;(add-to-list 'ac-sources `ac-source-
-;;(ac-config-default)
+(use-package yasnippet
+  :ensure t
+  :config
+  (yas-global-mode)
+  )
 
-(require 'yasnippet)
-(yas-global-mode 1)
+(use-package powerline
+  :ensure t
+  :config
+  (powerline-center-theme))
 
+(use-package helm
+  :ensure t
+  :config
+  (progn
+    (setq helm-buffers-fuzzy-match t)
+    (setq helm-split-window-in-side-p           t ; open helm buffer inside current window, not occupy whole other window
+	  helm-move-to-line-cycle-in-source     t ; move to end or beginning of source when reaching top or bottom of source.
+	  helm-ff-search-library-in-sexp        t ; search for library in `require' and `declare-function' sexp.
+	  helm-scroll-amount                    8 ; scroll 8 lines other window using M-<next>/M-<prior>
+	  helm-ff-file-name-history-use-recentf t
+	  helm-echo-input-in-header-line t)
 
-(require 'magit)
-(magit-mode)
-;;(setq magit-push-current-set-remote-if-missing t)
+    (setq helm-autoresize-max-height 0)
+    (setq helm-autoresize-min-height 20)
+    (helm-autoresize-mode 1)
+    (helm-mode 1))
+  )
 
-(require 'auto-indent-mode )
-(auto-indent-global-mode)
-(require 'evil )
-(evil-mode 1 )
-
-(require 'evil-leader)
-(evil-leader-mode t)
-(evil-leader/set-leader ",")
-
-
-
-(require 'powerline)
-(powerline-center-theme)
-;;(semantic-mode 1)
-
-;; funciton to add semantic to auto-complete types
-;;(defun my/add-semantic-to-ac ()
-;;  (add-to-list 'ac-sources 'ac-source-semantic)
-;;  )
-
-;; add hook to enable semantic completion on c/c++ files
-;;(add-hook 'c-mode-common-hook 'my/add-semantic-to-ac)
-
-;; enable Emacs Dev Env features globally
-;;(global-ede-mode t)
-
-
-(require 'helm)
 (require 'helm-config)
-(setq helm-buffers-fuzzy-matching t)
-(evil-leader/set-key "r" 'helm-find-files)
-
-(require 'projectile)
-(projectile-mode t)
-(require 'helm-projectile)
-(helm-projectile-on)
-
-
-;; The default "C-x c" is quite close to "C-x C-c", which quits Emacs.
-		 ;; Changed to "C-c h". Note: We must set "C-c h" globally, because we
-;; cannot change `helm-command-prefix-key' once `helm-config' is loaded.
 (global-set-key (kbd "C-c h") 'helm-command-prefix)
 (global-unset-key (kbd "C-x c"))
 
@@ -161,67 +142,132 @@
 (define-key helm-map (kbd "C-i") 'helm-execute-persistent-action) ; make TAB work in terminal
 (define-key helm-map (kbd "C-z")  'helm-select-action) ; list actions using C-z
 
-(when (executable-find "curl")
-  (setq helm-google-suggest-use-curl-p t))
+;;(when (executable-find "curl")
+;;  (setq helm-google-suggest-use-curl-p t))
 
-(setq helm-split-window-in-side-p           t ; open helm buffer inside current window, not occupy whole other window
-      helm-move-to-line-cycle-in-source     t ; move to end or beginning of source when reaching top or bottom of source.
-      helm-ff-search-library-in-sexp        t ; search for library in `require' and `declare-function' sexp.
-      helm-scroll-amount                    8 ; scroll 8 lines other window using M-<next>/M-<prior>
-      helm-ff-file-name-history-use-recentf t
-      helm-echo-input-in-header-line t)
-
-(defun spacemacs//helm-hide-minibuffer-maybe ()
-  "Hide minibuffer in Helm session if we use the header line as input field."
-  (when (with-helm-buffer helm-echo-input-in-header-line)
-    (let ((ov (make-overlay (point-min) (point-max) nil nil t)))
-      (overlay-put ov 'window (selected-window))
-      (overlay-put ov 'face
-                   (let ((bg-color (face-background 'default nil)))
-                     `(:background ,bg-color :foreground ,bg-color)))
-      (setq-local cursor-type nil))))
+(use-package projectile
+  :ensure t
+  :config
+  (projectile-global-mode t))
 
 
-(add-hook 'helm-minibuffer-set-up-hook
-          'spacemacs//helm-hide-minibuffer-maybe)
+(use-package helm-projectile
+  :ensure t
+  :config
+  (progn
+    (helm-projectile-on)
+    (setq projectile-indexing-method 'alien)))
 
-(setq helm-autoresize-max-height 0)
-(setq helm-autoresize-min-height 20)
-(helm-autoresize-mode 1)
+(use-package evil
+  :ensure t
+  :config
+  (evil-mode t))
 
-(helm-mode 1)
-(require 'company)
-(global-company-mode t)
 
-(require 'company-irony)
-(require 'company-irony-c-headers)
-(eval-after-load 'company
-  '(add-to-list 'company-backends '(company-irony company-irony-c-headers) )
-)
-(setq company-minimum-prefix-length 1)
-(setq company-idle-delay 0.1)
+(use-package evil-leader
+  :ensure t
+  :config
+  (progn
+    (evil-leader-mode t)
+    (evil-leader/set-leader ",")
+    (evil-leader/set-key "p" 'projectile-switch-project)))
 
-;;(defun my/company-c-cpp-header-init ()
-;;(eval-after-load 'company
-					;   ; '(require 'company-irony-c-headers)
-					;   ; '(add-to-list 'company-backends '('company-irony 'company-irony-c-headers))
-					;   ; )
-					; ; )
+
+(use-package company
+  :ensure t
+  :config
+    (global-company-mode t))
+
+(use-package ycmd
+  :ensure t
+  :config
+  (progn
+    ;;(set-variable 'ycmd-server-command '("python" "-u" "h:/.emacs.d/ycmd/ycmd"))
+    (set-variable 'ycmd-server-command '("python"  "/home/ashwin/.vim/bundle/YouCompleteMe/third_party/ycmd/ycmd"))
+    (set-variable 'ycmd-global-config "/home/ashwin/.vim/bundle/YouCompleteMe/third_party/ycmd/examples/.ycm_extra_conf.py")
+    (add-hook 'after-init-hook #'global-ycmd-mode)
+    )
+  )
+
+(use-package company-ycmd
+  :ensure t
+  :config
+  (progn
+    (company-ycmd-setup)
+    (setq comany-minimum-prefix-length 1)
+    (setq company-idle-delay 0.1))
+  ;;(add-to-list 'company-backends 'company-ycmd)
+  )
+
+(use-package company-math
+  :ensure t
+  :config
+  (add-to-list 'company-backends '( company-latex-commands company-math-symbols-unicode))
+  )
+
+;;; the below three functions make company play nice with yasnippet
+  (defun check-expansion ()
+    (save-excursion
+      (if (looking-at "\\_>") t
+        (backward-char 1)
+        (if (looking-at "\\.") t
+          (backward-char 1)
+          (if (looking-at "->") t nil)))))
+
+  (defun do-yas-expand ()
+    (let ((yas/fallback-behavior 'return-nil))
+      (yas/expand)))
+
+  (defun tab-indent-or-complete ()
+    (interactive)
+    (if (minibufferp)
+        (minibuffer-complete)
+      (if (or (not yas/minor-mode)
+              (null (do-yas-expand)))
+          (if (check-expansion)
+              (company-complete-common)
+            (indent-for-tab-command)))))
+
+  (global-set-key [tab] 'tab-indent-or-complete)
+
+;;(use-package company-irony
+;;  :ensure t
+;;  :config
+;;  (progn
+;;    (add-to-list 'company-backends 'company-irony)
+;;    (setq comany-minimum-prefix-length 1)
+;;    (setq company-idle-delay 0.1)
+;;    ))
 ;;
-					;;(add-hook 'c++-mode-hook 'my/company-c-cpp-header-init nil t)
-					;;(add-hook 'c-mode-hook 'my/company-c-cpp-header-init nil t)
+;;(use-package irony
+;;  :ensure t
+;;  :commands (irony-mode irony-cdb-autosetup-compile-options)
+;;  :config
+;;  (progn
+;;;;;; performance tweak for windows
+;;    (when (boundp 'w32-pipe-read-delay)
+;;      (setq w32-pipe-read-delay 0))
+;;    ;; Set the buffer size to 64K on Windows (from the original 4K)
+;;    (when (boundp 'w32-pipe-buffer-size)
+;;      (setq irony-server-w32-pipe-buffer-size (* 64 1024))))
+;;  :init
+;;  (progn
+;;    (add-hook 'c++-mode-hook #'irony-mode)
+;;    (add-hook 'c-mode-hook #'irony-mode)
+;;    (add-hook 'irony-mode-hook #'irony-cdb-autosetup-compile-options))
+;;  )
 
-;; irony mode setup
-(require 'irony)
-(add-hook 'c++-mode-hook 'irony-mode)
-(add-hook 'c-mode-hook 'irony-mode)
-(add-hook 'objc-mode-hook 'irony-mode)
-(add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options)
 
-(require 'helm-gtags)
-(add-hook 'c++-mode-hook 'helm-gtags-mode)
-(add-hook 'c-mode-hook 'helm-gtags-mode)
-;; Set key bindings
+(use-package helm-gtags
+  :ensure t
+  :config
+  (setq-default helm-gtags-auto-update t )
+  :commands helm-gtags-mode
+  :init
+  (progn
+    ( add-hook 'c++-mode-hook #'helm-gtags-mode)
+    ( add-hook 'c-mode-hook #'helm-gtags-mode)))
+
 (eval-after-load "helm-gtags"
   '(progn
      (define-key helm-gtags-mode-map (kbd "M-t") 'helm-gtags-find-tag)
@@ -232,14 +278,79 @@
      (define-key helm-gtags-mode-map (kbd "C-c >") 'helm-gtags-next-history)
      (define-key helm-gtags-mode-map (kbd "M-,") 'helm-gtags-pop-stack)))
 
+(use-package magit
+  :ensure t)
+
+(use-package flycheck
+  :ensure t
+  :config (global-flycheck-mode t))
+
+;;(use-package flycheck-irony
+;;  :ensure t
+;;  :commands flycheck-irony-setup
+;;  :init
+;;  (add-hook 'flycheck-mode-hook #'flycheck-irony-setup))
+
+(use-package flycheck-ycmd
+  :ensure t
+  :config
+  (flycheck-ycmd-setup)
+  )
+
+(use-package org
+  :ensure t)
+
+(linum-mode)
+
+    
+;;(add-hook 'after-save-hook
+;;	  (lambda ()(when (projectile-project-p)
+;;		      (call-process-shell-command
+;;		       (concat "pushd \"" (projectile-project-root) "\" && global -u" ) nil 0 )
+;;		      "tag-update-output" "tag-update-error"
+;;		      )))
+
+;; ediff configuration
+;; This is what you probably want if you are using a tiling window
+;; manager under X, such as ratpoison.
+(setq ediff-window-setup-function 'ediff-setup-windows-plain)
+
+;; No tabs please
+(setq-default indent-tabs-mode nil)
+
+;; invalidate projectile cache on project checkout
+(defun my/invalidate-projectile-cache (&rest _args)
+  (projectile-invalidate-cache nil)
+  )
+
+(advice-add 'magit-checkout
+            :after #'my-invalidate-projectile-cache )
+
+(advice-add 'magit-branch-and-checkout
+            :after #'my-invalidate-projectile-cache )
 
 
-(setq-default c-basic-offset 3)
+;; automatically generate tags on switching project
+(defun my/generate-gtags ()
+  (call-process-shell-command
+   (concat "pushd \"" (projectile-project-root) "\" && find -type f -iname '*.cpp' -o -iname '*.h' -o -iname '*.hpp' > tagfilelist && gtags -f tagfilelist && rm tagfilelist" ) nil 0 )
+  )
+(add-hook 'projectile-after-switch-project-hook 'my/generate-gtags)
 
-(require 'flycheck)
-(global-flycheck-mode t)
 
-(eval-after-load 'flycheck
-  '(add-hook 'flycheck-mode-hook #'flycheck-irony-setup))
-
+;;(defun my/tag-update-complete-sentinel (process error )
+;;  (message "received code %s" error )
+;;  (when (eq (process-status process) 'exit)
+;;    (if (zerop (process-exit-status process))
+;;        (helm-gtags-update-tags))))
+;;
+;;;; automatically generate tags on switching project
+;;(defun my/generate-gtags ()
+;;  (let ( (proc (start-process "update tags"
+;;                 nil
+;;                "cmd" 
+;;                (concat "pushd \"" (projectile-project-root) "\" && c:\\path\\find -type f -iname '*.cpp' -o -iname '*.h*' | gtags -f -" ))))
+;;  (set-process-sentinel proc #'my/tag-update-complete-sentinel )
+;;  ;;(helm-gtags-update-tags)
+;;  ))
 
