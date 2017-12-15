@@ -70,9 +70,10 @@
  '(nrepl-message-colors
    (quote
     ("#dc322f" "#cb4b16" "#b58900" "#546E00" "#B4C342" "#00629D" "#2aa198" "#d33682" "#6c71c4")))
+ '(org-agenda-files (quote ("~/gitRepos/notes/todo.org")))
  '(package-selected-packages
    (quote
-    (company-math color-theme-sanityinc-tomorrow flycheck-ycmd company-ycmd ycmd use-package helm-gtags helm-projectile ggtags evil-leader flycheck-irony company-irony company irony projectile flycheck powerline-evil powerline 0blayout evil auto-indent-mode zenburn-theme auto-complete markdown-mode magit cl-lib solarized-theme)))
+    (htmlize company-math color-theme-sanityinc-tomorrow flycheck-ycmd company-ycmd ycmd use-package helm-gtags helm-projectile ggtags evil-leader flycheck-irony company-irony company irony projectile flycheck powerline-evil powerline 0blayout evil auto-indent-mode zenburn-theme auto-complete markdown-mode magit cl-lib solarized-theme)))
  '(pdf-view-midnight-colors (quote ("#DCDCCC" . "#383838")))
  '(pos-tip-background-color "#073642")
  '(pos-tip-foreground-color "#93a1a1")
@@ -205,30 +206,30 @@
   (add-to-list 'company-backends '( company-latex-commands company-math-symbols-unicode))
   )
 
-;;; the below three functions make company play nice with yasnippet
-  (defun check-expansion ()
-    (save-excursion
-      (if (looking-at "\\_>") t
-        (backward-char 1)
-        (if (looking-at "\\.") t
-          (backward-char 1)
-          (if (looking-at "->") t nil)))))
+;; ;;; the below three functions make company play nice with yasnippet
+;;   (defun check-expansion ()
+;;     (save-excursion
+;;       (if (looking-at "\\_>") t
+;;         (backward-char 1)
+;;         (if (looking-at "\\.") t
+;;           (backward-char 1)
+;;           (if (looking-at "->") t nil)))))
 
-  (defun do-yas-expand ()
-    (let ((yas/fallback-behavior 'return-nil))
-      (yas/expand)))
+;;   (defun do-yas-expand ()
+;;     (let ((yas/fallback-behavior 'return-nil))
+;;       (yas/expand)))
 
-  (defun tab-indent-or-complete ()
-    (interactive)
-    (if (minibufferp)
-        (minibuffer-complete)
-      (if (or (not yas/minor-mode)
-              (null (do-yas-expand)))
-          (if (check-expansion)
-              (company-complete-common)
-            (indent-for-tab-command)))))
+;;   (defun tab-indent-or-complete ()
+;;     (interactive)
+;;     (if (minibufferp)
+;;         (minibuffer-complete)
+;;       (if (or (not yas/minor-mode)
+;;               (null (do-yas-expand)))
+;;           (if (check-expansion)
+;;               (company-complete-common)
+;;             (indent-for-tab-command)))))
 
-  (global-set-key [tab] 'tab-indent-or-complete)
+;;   (global-set-key [tab] 'tab-indent-or-complete)
 
 ;;(use-package company-irony
 ;;  :ensure t
@@ -297,8 +298,18 @@
   (flycheck-ycmd-setup)
   )
 
-(use-package org
+(use-package htmlize
   :ensure t)
+
+(use-package org
+  :ensure t
+  :config
+  (progn
+    (setq org-src-fontify-natively t)
+    (global-set-key "\C-ca" #'org-agenda)
+    (add-hook 'org-mode-hook (lambda() (flyspell-mode t)))
+    )
+  )
 
 (linum-mode)
 
@@ -318,25 +329,24 @@
 ;; No tabs please
 (setq-default indent-tabs-mode nil)
 
-;; invalidate projectile cache on project checkout
-(defun my/invalidate-projectile-cache (&rest _args)
-  (projectile-invalidate-cache nil)
-  )
-
-(advice-add 'magit-checkout
-            :after #'my-invalidate-projectile-cache )
-
-(advice-add 'magit-branch-and-checkout
-            :after #'my-invalidate-projectile-cache )
-
-
 ;; automatically generate tags on switching project
 (defun my/generate-gtags ()
-  (call-process-shell-command
+  (async-shell-command
    (concat "pushd \"" (projectile-project-root) "\" && find -type f -iname '*.cpp' -o -iname '*.h' -o -iname '*.hpp' > tagfilelist && gtags -f tagfilelist && rm tagfilelist" ) nil 0 )
   )
 (add-hook 'projectile-after-switch-project-hook 'my/generate-gtags)
 
+;; invalidate projectile cache on project checkout
+(defun my/invalidate-projectile-cache (&rest _args)
+  (projectile-invalidate-cache nil)
+  (my/generate-gtags) ;;; also generate gtags for new source code
+  )
+
+(advice-add 'magit-checkout
+            :after #'my/invalidate-projectile-cache )
+
+(advice-add 'magit-branch-and-checkout
+            :after #'my/invalidate-projectile-cache )
 
 ;;(defun my/tag-update-complete-sentinel (process error )
 ;;  (message "received code %s" error )
@@ -353,4 +363,12 @@
 ;;  (set-process-sentinel proc #'my/tag-update-complete-sentinel )
 ;;  ;;(helm-gtags-update-tags)
 ;;  ))
+(global-linum-mode t)
 
+(setq backup-directory-alist
+      `((".*" . ,temporary-file-directory)))
+(setq auto-save-file-name-transforms
+      `((".*" ,temporary-file-directory t)))
+
+(provide '.emacs)
+;;; .emacs ends here
