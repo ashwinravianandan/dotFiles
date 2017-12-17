@@ -70,10 +70,14 @@
  '(nrepl-message-colors
    (quote
     ("#dc322f" "#cb4b16" "#b58900" "#546E00" "#B4C342" "#00629D" "#2aa198" "#d33682" "#6c71c4")))
- '(org-agenda-files (quote ("~/gitRepos/notes/todo.org")))
+ '(org-agenda-files
+   (quote
+    ("~/gitRepos/notes/caldav.org" "~/gitRepos/notes/DocumentsForInterview.org" "~/gitRepos/notes/todo.org")))
+ '(org-icalendar-include-todo t)
+ '(org-log-into-drawer t)
  '(package-selected-packages
    (quote
-    (htmlize company-math color-theme-sanityinc-tomorrow flycheck-ycmd company-ycmd ycmd use-package helm-gtags helm-projectile ggtags evil-leader flycheck-irony company-irony company irony projectile flycheck powerline-evil powerline 0blayout evil auto-indent-mode zenburn-theme auto-complete markdown-mode magit cl-lib solarized-theme)))
+    (org-gcal oauth2 org-caldav htmlize company-math color-theme-sanityinc-tomorrow flycheck-ycmd company-ycmd ycmd use-package helm-gtags helm-projectile ggtags evil-leader flycheck-irony company-irony company irony projectile flycheck powerline-evil powerline 0blayout evil auto-indent-mode zenburn-theme auto-complete markdown-mode magit cl-lib solarized-theme)))
  '(pdf-view-midnight-colors (quote ("#DCDCCC" . "#383838")))
  '(pos-tip-background-color "#073642")
  '(pos-tip-foreground-color "#93a1a1")
@@ -308,9 +312,24 @@
     (setq org-src-fontify-natively t)
     (global-set-key "\C-ca" #'org-agenda)
     (add-hook 'org-mode-hook (lambda() (flyspell-mode t)))
+    (define-key org-mode-map (kbd "C-c m") 'pcomplete)
+    (setq org-todo-keywords
+          '((sequence "TODO(t)" "IN-PROGRESS(p)" "WAITING(w)" "|" "DONE(d)" "CANCELLED(c)")))
+    (define-key global-map "\C-cc" 'org-capture)
+    (setq org-capture-templates
+          '(("c" "Calendar entry" entry (file "~/gitRepos/notes/caldav.org")
+             "* %?")
+            ("t" "Todo entry" entry (file+olp+datetree "~/gitRepos/notes/todo.org" )
+             "* TODO %?" :tree-type `week )))
     )
   )
 
+(use-package org-gcal
+  :ensure t
+  :config
+  (setq org-gcal-client-id "ID"
+	org-gcal-client-secret "secret"
+	org-gcal-file-alist '(("email" .  "~/gitRepos/notes/caldav.org"))))
 (linum-mode)
 
     
