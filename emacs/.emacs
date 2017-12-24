@@ -74,10 +74,12 @@
    (quote
     ("~/gitRepos/notes/caldav.org" "~/gitRepos/notes/DocumentsForInterview.org" "~/gitRepos/notes/todo.org")))
  '(org-icalendar-include-todo t)
+ '(org-log-done (quote time))
  '(org-log-into-drawer t)
+ '(org-log-reschedule (quote note))
  '(package-selected-packages
    (quote
-    (org-gcal oauth2 org-caldav htmlize company-math color-theme-sanityinc-tomorrow flycheck-ycmd company-ycmd ycmd use-package helm-gtags helm-projectile ggtags evil-leader flycheck-irony company-irony company irony projectile flycheck powerline-evil powerline 0blayout evil auto-indent-mode zenburn-theme auto-complete markdown-mode magit cl-lib solarized-theme)))
+    (org-bullets org-gcal oauth2 org-caldav htmlize company-math color-theme-sanityinc-tomorrow flycheck-ycmd company-ycmd ycmd use-package helm-gtags helm-projectile ggtags evil-leader flycheck-irony company-irony company irony projectile flycheck powerline-evil powerline 0blayout evil auto-indent-mode zenburn-theme auto-complete markdown-mode magit cl-lib solarized-theme)))
  '(pdf-view-midnight-colors (quote ("#DCDCCC" . "#383838")))
  '(pos-tip-background-color "#073642")
  '(pos-tip-foreground-color "#93a1a1")
@@ -314,14 +316,22 @@
     (add-hook 'org-mode-hook (lambda() (flyspell-mode t)))
     (define-key org-mode-map (kbd "C-c m") 'pcomplete)
     (setq org-todo-keywords
-          '((sequence "TODO(t)" "IN-PROGRESS(p)" "WAITING(w)" "|" "DONE(d)" "CANCELLED(c)")))
+          '((sequence "TODO(t/!)" "IN-PROGRESS(p@/!)" "WAITING(w@/!)" "|" "DONE(d@)" "CANCELLED(c@)")))
     (define-key global-map "\C-cc" 'org-capture)
     (setq org-capture-templates
           '(("c" "Calendar entry" entry (file "~/gitRepos/notes/caldav.org")
              "* %?")
-            ("t" "Todo entry" entry (file+olp+datetree "~/gitRepos/notes/todo.org" )
-             "* TODO %?" :tree-type `week )))
+	    ("d" "Daily plan" entry (file+olp+datetree "~/gitRepos/notes/dailyplan.org")
+             "* Plan for the day \n - [ ] %?")
+            ("t" "Todo entry" entry (file+headline "~/gitRepos/notes/todo.org" "Tasks" )
+             "* TODO %?"  )))
     )
+  )
+
+(use-package org-bullets
+  :ensure t
+  :config
+  (add-hook 'org-mode-hook (lambda () (org-bullets-mode t)))
   )
 
 (use-package org-gcal
