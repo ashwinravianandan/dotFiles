@@ -322,7 +322,7 @@
           '(("c" "Calendar entry" entry (file "~/gitRepos/notes/caldav.org")
              "* %?")
 	    ("d" "Daily plan" entry (file+olp+datetree "~/gitRepos/notes/dailyplan.org")
-             "* Plan for the day \n - [ ] %?")
+             "* Plan for the day \n - [ ] %?" :tree-type week)
             ("t" "Todo entry" entry (file+headline "~/gitRepos/notes/todo.org" "Tasks" )
              "* TODO %?"  )))
     )
