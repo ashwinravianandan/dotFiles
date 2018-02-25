@@ -3,6 +3,7 @@ import XMonad.Hooks.DynamicLog
 import XMonad.Util.Run(spawnPipe)
 import XMonad.Hooks.ManageDocks
 import System.IO
+import XMonad.Layout.Spacing
 
 myWorkspaces::[String]
 myWorkspaces = ["1:home", "2:dev", "3:web", "4", "5", "6", "7", "8", "9"]
@@ -20,12 +21,13 @@ main = do
      xmonad $ def
             { modMask = mod4Mask
             , terminal = "urxvtc"
+            , borderWidth = 5
             , logHook = dynamicLogWithPP $ xmobarPP {
                 ppOutput = hPutStrLn xmproc
                 , ppTitle = xmobarColor "green" "" . shorten 50
                 }
             , workspaces = myWorkspaces
-            , layoutHook= avoidStruts $ layoutHook def
+            , layoutHook= smartSpacing 5 $ avoidStruts $ layoutHook def
             , manageHook= myManageHook
             , handleEventHook = docksEventHook <+> handleEventHook def
             }
