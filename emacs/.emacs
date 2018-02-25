@@ -21,6 +21,7 @@
  ;; If there is more than one, they won't work right.
  '(ansi-color-names-vector
    ["#3F3F3F" "#CC9393" "#7F9F7F" "#F0DFAF" "#8CD0D3" "#DC8CC3" "#93E0E3" "#DCDCCC"])
+ '(beacon-color "#cc6666")
  '(c-basic-offset 3)
  '(c-default-style
    (quote
@@ -83,7 +84,7 @@
     (org-bbdb org-bibtex org-docview org-gnus org-habit org-info org-irc org-mhe org-rmail org-w3m)))
  '(package-selected-packages
    (quote
-    (notmuch org-bullets org-gcal oauth2 org-caldav htmlize company-math color-theme-sanityinc-tomorrow flycheck-ycmd company-ycmd ycmd use-package helm-gtags helm-projectile ggtags evil-leader flycheck-irony company-irony company irony projectile flycheck powerline-evil powerline 0blayout evil auto-indent-mode zenburn-theme auto-complete markdown-mode magit cl-lib solarized-theme)))
+    (flycheck-haskell flycheck-ghcmod company-ghc jdee notmuch org-bullets org-gcal oauth2 org-caldav htmlize company-math color-theme-sanityinc-tomorrow flycheck-ycmd company-ycmd ycmd use-package helm-gtags helm-projectile ggtags evil-leader flycheck-irony company-irony company irony projectile flycheck powerline-evil powerline 0blayout evil auto-indent-mode zenburn-theme auto-complete markdown-mode magit cl-lib solarized-theme)))
  '(pdf-view-midnight-colors (quote ("#DCDCCC" . "#383838")))
  '(pos-tip-background-color "#073642")
  '(pos-tip-foreground-color "#93a1a1")
@@ -326,9 +327,9 @@
     (setq org-capture-templates
           '(("c" "Calendar entry" entry (file "~/gitRepos/notes/caldav.org")
              "* %?")
-	    ("d" "Daily plan" entry (file+olp+datetree "~/gitRepos/notes/dailyplan.org")
-             "* Plan for the day \n - [ ] %?" :tree-type week)
-            ("t" "Todo entry" entry (file+headline "~/gitRepos/notes/todo.org" "Tasks" )
+	    ("d" "Daily plan" entry (file+olp+datetree "~/gitRepos/notes.git/dailyplan.org")
+             "* Plan for the day %?" :tree-type week)
+            ("t" "Todo entry" entry (file+headline "~/gitRepos/notes.git/todo.org" "Tasks" )
              "* TODO %?"  )))
     )
   )
@@ -403,6 +404,21 @@
       `((".*" . ,temporary-file-directory)))
 (setq auto-save-file-name-transforms
       `((".*" ,temporary-file-directory t)))
+(setq mail-user-agent 'gnus-user-agent)
+(setq send-mail-function    'smtpmail-send-it
+      smtpmail-smtp-server  "smtp.gmail.com"
+      smtpmail-stream-type  'ssl
+      smtpmail-smtp-service 465)
+;;; .emacs ends here
+
+(use-package flycheck-haskell
+         :ensure t
+         )
+(use-package ghc
+         :ensure t
+         )
+(use-package haskell-mode
+         :ensure t
+         )
 
 (provide '.emacs)
-;;; .emacs ends here
