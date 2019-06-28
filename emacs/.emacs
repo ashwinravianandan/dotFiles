@@ -19,9 +19,6 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(ansi-color-names-vector
-   ["#3F3F3F" "#CC9393" "#7F9F7F" "#F0DFAF" "#8CD0D3" "#DC8CC3" "#93E0E3" "#DCDCCC"])
- '(beacon-color "#cc6666")
  '(c-basic-offset 3)
  '(c-default-style
    (quote
@@ -33,45 +30,15 @@
  '(company-auto-complete nil)
  '(company-ycmd-request-sync-timeout 0.1)
  '(compilation-message-face (quote default))
- '(cua-global-mark-cursor-color "#2aa198")
- '(cua-normal-cursor-color "#839496")
- '(cua-overwrite-cursor-color "#b58900")
- '(cua-read-only-cursor-color "#859900")
- '(custom-enabled-themes (quote (solarized-dark)))
  '(custom-safe-themes
    (quote
     ("a8245b7cc985a0610d71f9852e9f2767ad1b852c2bdea6f4aadc12cce9c4d6d0" "06f0b439b62164c6f8f84fdda32b62fb50b6d00e8b01c2208e55543a6337433a" "2a739405edf418b8581dcd176aaf695d319f99e3488224a3c495cb0f9fd814e3" "8aebf25556399b58091e533e455dd50a6a9cba958cc4ebb0aab175863c25b9a4" default)))
  '(flycheck-color-mode-line-face-to-color (quote mode-line-buffer-id))
- '(highlight-changes-colors (quote ("#d33682" "#6c71c4")))
- '(highlight-symbol-colors
-   (--map
-    (solarized-color-blend it "#002b36" 0.25)
-    (quote
-     ("#b58900" "#2aa198" "#dc322f" "#6c71c4" "#859900" "#cb4b16" "#268bd2"))))
- '(highlight-symbol-foreground-color "#93a1a1")
- '(highlight-tail-colors
-   (quote
-    (("#073642" . 0)
-     ("#546E00" . 20)
-     ("#00736F" . 30)
-     ("#00629D" . 50)
-     ("#7B6000" . 60)
-     ("#8B2C02" . 70)
-     ("#93115C" . 85)
-     ("#073642" . 100))))
- '(hl-bg-colors
-   (quote
-    ("#7B6000" "#8B2C02" "#990A1B" "#93115C" "#3F4D91" "#00629D" "#00736F" "#546E00")))
- '(hl-fg-colors
-   (quote
-    ("#002b36" "#002b36" "#002b36" "#002b36" "#002b36" "#002b36" "#002b36" "#002b36")))
  '(inhibit-startup-screen t)
  '(irony-additional-clang-options nil)
+ '(jdee-jdk-registry (quote (("1.8" . "/usr/lib64/jvm/oracle-jdk-bin-1.8"))))
  '(magit-diff-use-overlays nil)
  '(menu-bar-mode nil)
- '(nrepl-message-colors
-   (quote
-    ("#dc322f" "#cb4b16" "#b58900" "#546E00" "#B4C342" "#00629D" "#2aa198" "#d33682" "#6c71c4")))
  '(org-agenda-files
    (quote
     ("~/gitRepos/notes/habits.org" "~/gitRepos/notes/dailyplan.org" "~/gitRepos/notes/caldav.org" "~/gitRepos/notes/todo.org")))
@@ -84,29 +51,10 @@
     (org-bbdb org-bibtex org-docview org-gnus org-habit org-info org-irc org-mhe org-rmail org-w3m)))
  '(package-selected-packages
    (quote
-    (flycheck-haskell flycheck-ghcmod company-ghc jdee notmuch org-bullets org-gcal oauth2 org-caldav htmlize company-math color-theme-sanityinc-tomorrow flycheck-ycmd company-ycmd ycmd use-package helm-gtags helm-projectile ggtags evil-leader flycheck-irony company-irony company irony projectile flycheck powerline-evil powerline 0blayout evil auto-indent-mode zenburn-theme auto-complete markdown-mode magit cl-lib solarized-theme)))
- '(pdf-view-midnight-colors (quote ("#DCDCCC" . "#383838")))
- '(pos-tip-background-color "#073642")
- '(pos-tip-foreground-color "#93a1a1")
+    (typescript-mode gruvbox-theme smartparens flycheck-haskell flycheck-ghcmod company-ghc jdee notmuch org-bullets org-gcal oauth2 org-caldav htmlize company-math color-theme-sanityinc-tomorrow flycheck-ycmd company-ycmd ycmd use-package helm-gtags helm-projectile ggtags evil-leader flycheck-irony company-irony company irony projectile flycheck powerline-evil powerline 0blayout evil auto-indent-mode zenburn-theme auto-complete markdown-mode magit cl-lib solarized-theme)))
  '(powerline-gui-use-vcs-glyph t)
- '(smartrep-mode-line-active-bg (solarized-color-blend "#859900" "#073642" 0.2))
- '(term-default-bg-color "#002b36")
- '(term-default-fg-color "#839496")
  '(tool-bar-mode nil)
- '(vc-annotate-background-mode nil)
- '(weechat-color-list
-   (quote
-    (unspecified "#002b36" "#073642" "#990A1B" "#dc322f" "#546E00" "#859900" "#7B6000" "#b58900" "#00629D" "#268bd2" "#93115C" "#d33682" "#00736F" "#2aa198" "#839496" "#657b83")))
- '(xterm-color-names
-   ["#073642" "#dc322f" "#859900" "#b58900" "#268bd2" "#d33682" "#2aa198" "#eee8d5"])
- '(xterm-color-names-bright
-   ["#002b36" "#cb4b16" "#586e75" "#657b83" "#839496" "#6c71c4" "#93a1a1" "#fdf6e3"]))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(default ((t (:inherit nil :stipple nil :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 110 :width normal :foundry "ADBO" :family "Source Code Pro")))))
+ '(vc-annotate-background-mode nil))
 (put 'erase-buffer 'disabled nil)
 
 (package-initialize)
@@ -118,10 +66,18 @@
 (eval-when-compile
   (require 'use-package))
 
+(load-theme 'gruvbox)
+
 (use-package yasnippet
   :ensure t
   :config
   (yas-global-mode)
+  )
+
+(use-package jdee
+  :ensure t
+  :config
+  (setq jdee-server-dir "/home/ashwin/jars" )
   )
 
 (use-package powerline
@@ -196,7 +152,7 @@
   :config
   (progn
     ;;(set-variable 'ycmd-server-command '("python" "-u" "h:/.emacs.d/ycmd/ycmd"))
-    (set-variable 'ycmd-server-command '("python"  "/home/ashwin/.vim/bundle/YouCompleteMe/third_party/ycmd/ycmd"))
+    (set-variable 'ycmd-server-command '("python"  "/home/ashwin/.vim/plugged/YouCompleteMe/third_party/ycmd/ycmd"))
     (set-variable 'ycmd-global-config "/home/ashwin/.vim/bundle/YouCompleteMe/third_party/ycmd/examples/.ycm_extra_conf.py")
     (add-hook 'after-init-hook #'global-ycmd-mode)
     )
@@ -421,4 +377,17 @@
          :ensure t
          )
 
+(use-package  smartparens
+         :ensure t
+         :init (smartparens-global-mode)
+         )
+
+(use-package  typescript-mode
+  :ensure t
+  :config
+  (setq typescript-indent-level 2)
+  )
+
+(add-to-list 'auto-mode-alist '("\\.jsx\\'" . js-mode))
+(add-to-list 'auto-mode-alist '("\\.tsx\\'" . typescript-mode))
 (provide '.emacs)

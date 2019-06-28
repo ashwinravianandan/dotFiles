@@ -28,7 +28,7 @@ conky.config = {
    own_window=true,
    --own_window_class conky
 
-   own_window_type="override",
+   own_window_type="desktop",
    own_window_transparent=true,
    --own_window_argb_visual yes
    --own_window_argb_value 200
@@ -64,7 +64,7 @@ conky.config = {
 
    -- Text alignment, other possible values are commented
    --alignment top_left
-   alignment="top_right",
+   alignment="top_left",
    --alignment bottom_left
    --alignment bottom_right
 
